@@ -1,6 +1,6 @@
 {
-  "name": "telegrambot",
-  "version": "0.0.1",
+  "name": "node-telegram-api",
+  "version": "0.0.2",
   "description": "NodeJS Telegram API Implementation",
   "main": "api.js",
   "scripts": {
