@@ -1,4 +1,4 @@
-const axios = require('axios');
+const request = require('request');
 
 const DEFAULT_API_ENDPOINTS = [
 	'getUpdates',
@@ -81,15 +81,27 @@ class TelegramAPI {
 	}
 
 	request (endpoint, options) {
-		return axios
-			.request({
+		return new Promise((resolve, reject) => request(
+			{
 				method: 'GET',
-				baseURL: this.API_URL,
+				baseUrl: this.API_URL,
 				url: endpoint,
-				params: options,
-				timeout: (options && options.timeout) ? ((options.timeout + 2) * 1000) : (5 * 1000),
-			})
-			.then((res) => res.data);
+				qs: options,
+				timeout: (options && options.timeout) ? (options.timeout + 500) : (5 * 1000),
+			},
+			(error, response, body) => {
+				if (error) return reject(error);
+				try {
+					const result = JSON.parse(body);
+
+					if (response.status !== 200) return reject(result);
+
+					return resolve(result);
+				} catch (e) {
+					return reject(e);
+				}
+			},
+		));
 	}
 }
 
