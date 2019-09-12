@@ -1,7 +1,7 @@
 const TelegramAPI = require('./api');
 
 class TelegramListener {
-	constructor (API_KEY) {
+	constructor (API_KEY, { timeout }) {
 		if (!API_KEY) throw new TypeError('You must supply an API_KEY argument');
 
 		this.API_KEY = API_KEY;
@@ -11,11 +11,13 @@ class TelegramListener {
 		this.update_handlers = [];
 
 		this.ctx = { api: this.api };
+
+		this.timeout = timeout || 5;
 	}
 
 	listen () {
 		this.api
-			.getUpdates({ timeout: 3600, offset: this.last_update_id })
+			.getUpdates({ timeout: this.timeout, offset: this.last_update_id })
 			.then((res) => {
 				if (res.ok && res.result.length !== 0) {
 					res.result.forEach(this.processUpdate.bind(this));
