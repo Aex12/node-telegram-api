@@ -94,7 +94,7 @@ class TelegramAPI {
 				try {
 					const result = JSON.parse(body);
 
-					if (response.status !== 200) return reject(result);
+					if (response.statusCode !== 200) return reject(result);
 
 					return resolve(result);
 				} catch (e) {
