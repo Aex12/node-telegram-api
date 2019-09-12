@@ -1,7 +1,7 @@
 const TelegramAPI = require('./api');
 
 class TelegramListener {
-	constructor (API_KEY, { timeout }) {
+	constructor (API_KEY, { timeout, after_error_wait_time }) {
 		if (!API_KEY) throw new TypeError('You must supply an API_KEY argument');
 
 		this.API_KEY = API_KEY;
@@ -13,6 +13,7 @@ class TelegramListener {
 		this.ctx = { api: this.api };
 
 		this.timeout = timeout || 5;
+		this.after_error_wait_time = after_error_wait_time || 3 * 1000;
 	}
 
 	listen () {
@@ -27,7 +28,7 @@ class TelegramListener {
 			})
 			.catch((err) => {
 				console.error('Error while getting updates: ', err);
-				setTimeout(this.listen.bind(this), 5 * 1000);
+				setTimeout(this.listen.bind(this), this.after_error_wait_time);
 			});
 
 		return this;
